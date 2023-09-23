@@ -214,7 +214,7 @@ def main():
         day = st.selectbox(day_message, np.array(allowed_days))
       
 
-        rows = st.number_input("How manys rows of the dataframe do you wish to see? ", min_value=0, max_value=100)
+        rows = st.number_input("How manys rows of the dataframe do you wish to see? ", min_value=0, max_value=100, step=5)
         
         st.button("Calculate", on_click=set_stage, args=[3])
 
