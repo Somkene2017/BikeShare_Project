@@ -235,10 +235,7 @@ def main():
         with tab1:
             st.markdown("## Click the expander to see! :point_down:")
             with st.expander("### Click to view Descriptive Statistics"):
-                col1, col2, col3 = st.columns(3)
-                col1.metric("Temperature", "70 °F", "1.2 °F")
-                col2.metric("Wind", "9 mph", "-8%")
-                col3.metric("Humidity", "86%", "4%")
+
                 time_stats(df)
                 station_stats(df)
                 trip_duration_stats(df)
@@ -246,6 +243,7 @@ def main():
         
         #This tab contains the dataframe if the user wishes to view it
         with tab2:
+            
             if rows != 0:
                 st.write(df.head(rows))
             else:
