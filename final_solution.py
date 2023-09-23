@@ -4,10 +4,11 @@ import pandas as pd
 import numpy as np
 import plotly.express as px
 
-# References: 1) https://docs.streamlit.io/library
-#             2) https://gist.github.com/rxaviers/7360908
-#             3) https://youtu.be/_Um12_OlGgw?si=LUJMz9CNax6aSSkC
-#             4) https://youtu.be/vIQQR_yq-8I?si=AbOO57_xpN9XsrmE
+# References: 
+# 1) https://docs.streamlit.io/library
+# 2) https://gist.github.com/rxaviers/7360908
+# 3) https://youtu.be/_Um12_OlGgw?si=LUJMz9CNax6aSSkC
+# 4) https://youtu.be/vIQQR_yq-8I?si=AbOO57_xpN9XsrmE
 
 
 
