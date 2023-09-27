@@ -16,13 +16,13 @@ CITY_DATA = { 'chicago': 'chicago.csv',
               'new york city': 'new_york_city.csv',
               'washington': 'washington.csv' }
 
-# get user input for city (chicago, new york city, washington). HINT: Use a while loop to handle invalid inputs
+
 allowed_city = ['Chicago', 'New York City', 'Washington']
 
-# get user input for month (all, january, february, ... , june)
+
 allowed_months = [None, 'all', 'January', 'February', 'March', 'April', 'May', 'June']
 
-# get user input for day of week (all, monday, tuesday, ... sunday)
+
 allowed_days = ['all', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 
 
@@ -39,10 +39,13 @@ def load_data(city, month, day):
         df - Pandas DataFrame containing city data filtered by month and day
     """
     df = pd.read_csv(CITY_DATA[city.lower()])
+
     df['Start Time'] = pd.to_datetime(df['Start Time'])
     df['End Time'] = pd.to_datetime(df['End Time'])
+
     df['month']=df['Start Time'].dt.month_name()
     df['day_of_week'] = df['Start Time'].dt.day_name()
+
     if month != 'all':
         df = df[df['month'] == month.title()]
     if day != 'all':
@@ -94,18 +97,21 @@ def station_stats(df):
     start_time = time.time()
     
     tab1, tab2, tab3 = st.tabs(["Start station", "End Station", "Combination of Stations"])
+
     with tab1:
         # display most commonly used start station
         st.metric("Most commonly used Start Station", df['Start Station'].mode()[0])
+
     with tab2:
         # display most commonly used end station
         st.metric("Most commonly used End Station:", df['End Station'].mode()[0])
+
     with tab3:
         # display most frequent combination of start station and end station trip
         df['combination_station'] = df['Start Station'] + " + " + df['End Station']
         st.markdown(f"###### Most Frequent combination of Start - End station:") 
         st.markdown(f"#### {df['combination_station'].mode()[0]}")
-        #df.drop(columns='combination_station', inplace=True)
+        
     st.write("\nThis took {} seconds.".format(round(time.time() - start_time, 3)))
     st.write('-'*40)
 
@@ -121,6 +127,7 @@ def trip_duration_stats(df):
 
     
     tab1, tab2 =st.tabs(['Travel Time', "Date"])
+    #Travel Time Metric
     with tab1:
         st.metric("Total travel time",  f"{day} day(s), {hour} hr(s) and {minute} min(s)")
     # display mean travel time
@@ -129,7 +136,7 @@ def trip_duration_stats(df):
 
         st.metric("The mean travel time", f"{day2} day(s), {hour2} hr(s) and {minute2} min(s)")
 
-        
+    #Date Metric    
     with tab2:
         col1, col2 = st.columns(2)
         col1.metric("From", str(df['Start Time'].dt.date.min()) )
@@ -197,7 +204,7 @@ def main():
 
     city_message = "Choose a city: (Chicago, New York City or Washington): "
     
-    #takes only inputs that are within the city before proceeding to the next stage of the app
+    # get user input for city (chicago, new york city, washington) before proceeding to the next stage of the app
     city = st.text_input(city_message, on_change=set_stage, args=[1]).lower()
    
     if city.title() not in allowed_city:
@@ -206,29 +213,36 @@ def main():
     
     if st.session_state.stage >= 1:
         month_message = "Choose your month you want to analyze: January, February, March, April, May, June or all: "
+
+        # get user input for month (all, january, february, ... , june)
         month =st.selectbox(month_message, np.array(allowed_months), on_change=set_stage, args=[2])
         if month is None:
             set_stage(1)
 
     if st.session_state.stage >= 2:
         day_message = "Choose your day you want to analyze: \n monday, tuesday, wednesday, thursday, friday, saturday, sunday or all:"
-        day = st.selectbox(day_message, np.array(allowed_days))
-      
 
+        # get user input for day of week (all, monday, tuesday, ... sunday)
+        day = st.selectbox(day_message, np.array(allowed_days))
+        
+        # gets user input for number of rows of the dataframe to be displayed 
         rows = st.number_input("How manys rows of the dataframe do you wish to see? ", min_value=0, max_value=100, step=5)
         
         st.button("Calculate", on_click=set_stage, args=[3])
 
     if st.session_state.stage >= 3:
-        #Porgress Bar that loads the the three tabs
+        # Progress Bar that loads the the three tabs
         my_bar = st.progress(0)
 
         for percent_complete in range(100):
             time.sleep(0.01)
             my_bar.progress(percent_complete + 1)
         st.success("Done")
+        # End of progress bar
 
+        #Loading the dataframe
         df = load_data(city, month, day)
+        
         tab1, tab2, tab3 = st.tabs(["**Descriptive Statistics**", "**View DataFrame**", "**Charts**:chart_with_downwards_trend:"])
 
         #This tab contains the descriptive statistics
@@ -243,7 +257,7 @@ def main():
         
         #This tab contains the dataframe if the user wishes to view it
         with tab2:
-            
+
             if rows != 0:
                 st.write(df.head(rows))
             else:
